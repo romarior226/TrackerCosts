@@ -4,14 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.trackercosts.R
 import com.example.trackercosts.databinding.TrackerFragmentExpenseListBinding
+import com.example.trackercosts.domain.entity.Category
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlin.apply
 
 @AndroidEntryPoint
 class ExpenseFragment : Fragment(R.layout.tracker_fragment_expense_list) {
@@ -19,9 +24,17 @@ class ExpenseFragment : Fragment(R.layout.tracker_fragment_expense_list) {
     private val viewmodel: ExpenseViewModel by activityViewModels()
 
     val adapter = ExpenseAdapter(
-        { expense -> viewmodel.deleteExpanse(expense) }
-    )
-    private var _binding: TrackerFragmentExpenseListBinding? = null
+        { expense -> viewmodel.deleteExpanse(expense) },
+        { expense ->
+            val bundle = Bundle().apply {
+                putInt("expense_id", expense.id)
+            }
+            findNavController().navigate(R.id.action_expenseFragment_to_addExpense, bundle)
+            viewmodel.updateExpense(expense)
+        })
+
+    private
+    var _binding: TrackerFragmentExpenseListBinding? = null
     val binding: TrackerFragmentExpenseListBinding
         get() = _binding ?: throw RuntimeException("TrackerTemExpenseBinding")
 
@@ -41,11 +54,33 @@ class ExpenseFragment : Fragment(R.layout.tracker_fragment_expense_list) {
                 adapter.submitList(it)
             }
         }
+        val categoryAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            Category.entries
+        )
         with(binding) {
+            categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerFilterCategory.adapter = categoryAdapter
+            spinnerFilterCategory.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        val category = spinnerFilterCategory.selectedItem as Category
+                        viewmodel.getAllByCategory(category)
+                    }
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
+                }
+
             rvExpenses.adapter = adapter
             rvExpenses.layoutManager = LinearLayoutManager(requireContext())
             binding.fabAddExpense.setOnClickListener {
-
+                findNavController().navigate(R.id.action_expenseFragment_to_addExpense)
             }
         }
     }

@@ -4,15 +4,17 @@ import com.example.trackercosts.data.dao.ExpenseDao
 import com.example.trackercosts.data.entity.ExpenseDbModel
 import com.example.trackercosts.data.toDbModel
 import com.example.trackercosts.data.toExpense
+import com.example.trackercosts.domain.entity.Category
 import com.example.trackercosts.domain.entity.Expense
 import com.example.trackercosts.domain.repo.ExpenseRepository
 import javax.inject.Inject
 
-class   ExpenseRepoImpl @Inject constructor(private val expanseDao: ExpenseDao) : ExpenseRepository {
+class ExpenseRepoImpl @Inject constructor(private val expanseDao: ExpenseDao) : ExpenseRepository {
 
     suspend fun getAllExpenseDbModelList(): List<ExpenseDbModel> {
         return expanseDao.getAllExpense()
     }
+
 
     override suspend fun getAllExpense(): List<Expense> {
         return getAllExpenseDbModelList().map {
@@ -20,8 +22,15 @@ class   ExpenseRepoImpl @Inject constructor(private val expanseDao: ExpenseDao) 
         }
     }
 
-    override suspend fun addExpense(expense: Expense) : Long {
-       return  expanseDao.insertExpense(expense.toDbModel())
+    override suspend fun getExpenses(category: String): List<Expense> {
+        return expanseDao.getExpenses(category).map {
+            it.toExpense()
+        }
+    }
+
+
+    override suspend fun addExpense(expense: Expense): Long {
+        return expanseDao.insertExpense(expense.toDbModel())
     }
 
     override suspend fun deleteExpense(expense: Expense) {

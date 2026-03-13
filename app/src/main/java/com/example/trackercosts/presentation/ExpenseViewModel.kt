@@ -7,6 +7,7 @@ import com.example.trackercosts.domain.entity.Expense
 import com.example.trackercosts.domain.usecases.AddExpenseUseCase
 import com.example.trackercosts.domain.usecases.DeleteExpenseUseCase
 import com.example.trackercosts.domain.usecases.GetAllExpenseUseCase
+import com.example.trackercosts.domain.usecases.GetExpenseUseCase
 import com.example.trackercosts.domain.usecases.UpdateExpenseUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +22,8 @@ class ExpenseViewModel @Inject constructor(
     private val addExpenseUseCase: AddExpenseUseCase,
     private val deleteExpenseUseCase: DeleteExpenseUseCase,
     private val getAllExpenseUseCase: GetAllExpenseUseCase,
-    private val updateExpenseUseCase: UpdateExpenseUseCase
+    private val updateExpenseUseCase: UpdateExpenseUseCase,
+    private val getExpenseUseCase: GetExpenseUseCase
 ) : ViewModel() {
 
     private val _expenseList = MutableStateFlow<List<Expense>>(emptyList())
@@ -31,6 +33,12 @@ class ExpenseViewModel @Inject constructor(
     init {
         loadExpense()
     }
+    fun getAllByCategory(category: Category) {
+        viewModelScope.launch {
+            _expenseList.value = getExpenseUseCase(category.name)
+        }
+    }
+
     fun loadExpense() {
         viewModelScope.launch {
             _expenseList.value = getAllExpenseUseCase()
@@ -56,7 +64,8 @@ class ExpenseViewModel @Inject constructor(
     fun updateExpense(expense: Expense) {
         viewModelScope.launch {
             _expenseList.value = _expenseList.value.map {
-                if (it.id == expense.id) expense else it
+                if (it.id == expense.id) expense
+                else it
             }
             updateExpenseUseCase(expense)
         }

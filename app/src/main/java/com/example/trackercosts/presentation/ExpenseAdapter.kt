@@ -12,7 +12,8 @@ import java.util.Date
 import java.util.Locale
 
 class ExpenseAdapter(
-    private val onDeleteClick: ((Expense) -> Unit)? = null
+    private val onDeleteClick: ((Expense) -> Unit)? = null,
+    private val onChangeClick: ((Expense) -> Unit)? = null
 ) : ListAdapter<Expense, ExpenseAdapter.ExpenseViewHolder>(DIFF_CALLBACK) {
 
     override fun onCreateViewHolder(
@@ -32,16 +33,20 @@ class ExpenseAdapter(
         position: Int
     ) {
         val item = getItem(position)
+
         with(holder.binding) {
             val format = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
             tvDate.text = "Додано: ${format.format(Date(item.date))}"
-            tvAmount.text = item.amount.toString()
+            tvAmount.text = "${item.amount} ${item.currency}"
             tvCategory.text = item.category.toString()
             tvDescription.text = item.description
+
             btnDelete.setOnClickListener {
                 onDeleteClick?.invoke(item)
             }
-
+            holder.binding.root.setOnClickListener {
+                onChangeClick?.invoke(item)
+            }
         }
     }
 
