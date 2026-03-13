@@ -22,12 +22,14 @@ class ExpenseRepoImpl @Inject constructor(private val expanseDao: ExpenseDao) : 
         }
     }
 
-    override suspend fun getExpenses(category: String): List<Expense> {
-        return expanseDao.getExpenses(category).map {
+    override suspend fun getExpenses(
+        category: String,
+        sortType: Byte
+    ): List<Expense> {
+        return expanseDao.getExpenses(category, sortType).map {
             it.toExpense()
         }
     }
-
 
     override suspend fun addExpense(expense: Expense): Long {
         return expanseDao.insertExpense(expense.toDbModel())

@@ -64,7 +64,6 @@ class ExpenseFragment : Fragment(R.layout.tracker_fragment_expense_list) {
             spinnerFilterCategory.adapter = categoryAdapter
             spinnerFilterCategory.onItemSelectedListener =
                 object : AdapterView.OnItemSelectedListener {
-
                     override fun onItemSelected(
                         parent: AdapterView<*>?,
                         view: View?,
@@ -72,11 +71,26 @@ class ExpenseFragment : Fragment(R.layout.tracker_fragment_expense_list) {
                         id: Long
                     ) {
                         val category = spinnerFilterCategory.selectedItem as Category
-                        viewmodel.getAllByCategory(category)
+                        viewmodel.changeCategory(category)
+                        viewmodel.getExpense()
                     }
+
                     override fun onNothingSelected(parent: AdapterView<*>?) {}
                 }
-
+            var sortByDate: Byte = 0
+            btnSortDate.setOnClickListener {
+                sortByDate = if (sortByDate == 0.toByte()) 1
+                else 0
+                viewmodel.changeSortByDate(sortByDate)
+                viewmodel.getExpense()
+            }
+            var sortByAmount: Byte = 2
+            btnSortAmount.setOnClickListener {
+                sortByAmount = if (sortByAmount == 2.toByte()) 3
+                else 2
+                viewmodel.changeSortByAmount(sortByAmount)
+                viewmodel.getExpense()
+            }
             rvExpenses.adapter = adapter
             rvExpenses.layoutManager = LinearLayoutManager(requireContext())
             binding.fabAddExpense.setOnClickListener {

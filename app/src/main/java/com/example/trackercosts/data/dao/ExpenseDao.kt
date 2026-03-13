@@ -13,18 +13,27 @@ import com.example.trackercosts.domain.entity.Expense
 interface ExpenseDao {
 
     @Query("SELECT * FROM expense ORDER BY date DESC")
-    suspend fun getAllExpense() : List<ExpenseDbModel>
+    suspend fun getAllExpense(): List<ExpenseDbModel>
 
-    @Query("""
+    @Query(
+        """
     SELECT * FROM expense 
-    WHERE :category = 'ALL' OR category = :category
-    ORDER BY date DESC
-    """)
-    suspend fun getExpenses(category: String) : List<ExpenseDbModel>
+    WHERE (:category = 'ALL' OR category = :category)
+ORDER BY
+    CASE WHEN :sortType = 0 THEN date END DESC,
+    CASE WHEN :sortType = 1 THEN date END ASC,
+    CASE WHEN :sortType = 2 THEN amount END DESC,
+    CASE WHEN :sortType = 3 THEN amount END ASC
+"""
+    )
+    suspend fun getExpenses(
+        category: String,
+        sortType: Byte,
+    ): List<ExpenseDbModel>
 
 
     @Insert
-    suspend fun insertExpense(expenseDbModel: ExpenseDbModel ) : Long
+    suspend fun insertExpense(expenseDbModel: ExpenseDbModel): Long
 
     @Update
     suspend fun updateExpense(expenseDbModel: ExpenseDbModel)

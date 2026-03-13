@@ -6,7 +6,10 @@ import com.example.trackercosts.domain.repo.ExpenseRepository
 import javax.inject.Inject
 
 class GetExpenseUseCase @Inject constructor(private val expenseRepository: ExpenseRepository) {
-    suspend operator fun invoke(category: String): List<Expense> {
-        return expenseRepository.getExpenses(category)
+    suspend operator fun invoke(
+        category: String,
+        sortType: Byte
+    ): List<Expense> {
+        return expenseRepository.getExpenses(category, sortType)
     }
 }

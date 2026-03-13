@@ -3,30 +3,40 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingTop="50dp">
+    >
 
     <Button
         android:id="@+id/btn_sort_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="30dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="64dp"
-        android:text="По даті"
+        android:layout_margin="8dp"
+        android:layout_marginVertical="100dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="96dp"
+        android:text="По даті ↓"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_sort_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="По сумі ↓"
+        android:layout_margin="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_sort_date" />
 
     <Spinner
         android:id="@+id/spinner_filter_category"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:layout_marginTop="56dp"
-        app:layout_constraintBaseline_toBaselineOf="@id/btn_sort_date"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_sort_amount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.533"
-        app:layout_constraintStart_toEndOf="@id/btn_sort_date"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBaseline_toBaselineOf="@id/btn_sort_date"/>
 
     <TextView
         android:id="@+id/tv_total_balance"

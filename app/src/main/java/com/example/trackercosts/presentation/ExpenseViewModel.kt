@@ -26,6 +26,10 @@ class ExpenseViewModel @Inject constructor(
     private val getExpenseUseCase: GetExpenseUseCase
 ) : ViewModel() {
 
+
+    private var sortByType: Byte = 0
+    private var currentCategory: Category = Category.ALL
+
     private val _expenseList = MutableStateFlow<List<Expense>>(emptyList())
     val expanseList: StateFlow<List<Expense>>
         get() = _expenseList
@@ -33,9 +37,23 @@ class ExpenseViewModel @Inject constructor(
     init {
         loadExpense()
     }
-    fun getAllByCategory(category: Category) {
+
+    fun changeSortByDate(sortDate: Byte) {
+        sortByType = sortDate
+    }
+
+    fun changeSortByAmount(sortAmount: Byte) {
+        sortByType = sortAmount
+    }
+
+    fun changeCategory(category: Category) {
+        currentCategory = category
+    }
+
+    fun getExpense(
+    ) {
         viewModelScope.launch {
-            _expenseList.value = getExpenseUseCase(category.name)
+            _expenseList.value = getExpenseUseCase(currentCategory.name, sortByType)
         }
     }
 
@@ -44,6 +62,7 @@ class ExpenseViewModel @Inject constructor(
             _expenseList.value = getAllExpenseUseCase()
         }
     }
+
     fun addExpense(
         amount: Double,
         category: Category,
@@ -51,16 +70,18 @@ class ExpenseViewModel @Inject constructor(
         currency: String
     ) {
         viewModelScope.launch {
-            val expense = addExpenseUseCase( amount, category, description, currency)
+            val expense = addExpenseUseCase(amount, category, description, currency)
             _expenseList.value += expense
         }
     }
+
     fun deleteExpanse(expense: Expense) {
         viewModelScope.launch {
             deleteExpenseUseCase(expense)
             _expenseList.value -= expense
         }
     }
+
     fun updateExpense(expense: Expense) {
         viewModelScope.launch {
             _expenseList.value = _expenseList.value.map {
@@ -70,4 +91,6 @@ class ExpenseViewModel @Inject constructor(
             updateExpenseUseCase(expense)
         }
     }
+
+
 }
