@@ -32,7 +32,6 @@ class ExpenseFragment : Fragment(R.layout.tracker_fragment_expense_list) {
             findNavController().navigate(R.id.action_expenseFragment_to_addExpense, bundle)
             viewmodel.updateExpense(expense)
         })
-
     private
     var _binding: TrackerFragmentExpenseListBinding? = null
     val binding: TrackerFragmentExpenseListBinding
@@ -49,9 +48,11 @@ class ExpenseFragment : Fragment(R.layout.tracker_fragment_expense_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewLifecycleOwner.lifecycleScope.launch {
-            viewmodel.expanseList.collect {
+            viewmodel.expanseList.collect { it ->
                 adapter.submitList(it)
+                binding.tvTotalBalance.text  = "Баланс: -${it.sumOf { it.amount }}₴"
             }
         }
         val categoryAdapter = ArrayAdapter(
@@ -96,6 +97,7 @@ class ExpenseFragment : Fragment(R.layout.tracker_fragment_expense_list) {
             binding.fabAddExpense.setOnClickListener {
                 findNavController().navigate(R.id.action_expenseFragment_to_addExpense)
             }
+
         }
     }
 
