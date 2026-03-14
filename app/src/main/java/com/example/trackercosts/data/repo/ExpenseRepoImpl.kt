@@ -4,7 +4,6 @@ import com.example.trackercosts.data.dao.ExpenseDao
 import com.example.trackercosts.data.entity.ExpenseDbModel
 import com.example.trackercosts.data.toDbModel
 import com.example.trackercosts.data.toExpense
-import com.example.trackercosts.domain.entity.Category
 import com.example.trackercosts.domain.entity.Expense
 import com.example.trackercosts.domain.repo.ExpenseRepository
 import javax.inject.Inject
@@ -13,6 +12,17 @@ class ExpenseRepoImpl @Inject constructor(private val expanseDao: ExpenseDao) : 
 
     suspend fun getAllExpenseDbModelList(): List<ExpenseDbModel> {
         return expanseDao.getAllExpense()
+    }
+
+    override suspend fun getExpensesDetails(
+        category: String,
+        sortType: Byte,
+        dateFrom: Long,
+        dateTo: Long
+    ): List<Expense> {
+        return expanseDao.getExpensesDetails(category, sortType, dateFrom, dateTo)
+            .map { it.toExpense()
+        }
     }
 
 

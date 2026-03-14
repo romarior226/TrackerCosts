@@ -8,6 +8,7 @@ import com.example.trackercosts.domain.usecases.AddExpenseUseCase
 import com.example.trackercosts.domain.usecases.DeleteExpenseUseCase
 import com.example.trackercosts.domain.usecases.GetAllExpenseUseCase
 import com.example.trackercosts.domain.usecases.GetExpenseUseCase
+import com.example.trackercosts.domain.usecases.GetExpensesDetailsUseCase
 import com.example.trackercosts.domain.usecases.UpdateExpenseUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,12 +23,17 @@ class ExpenseViewModel @Inject constructor(
     private val deleteExpenseUseCase: DeleteExpenseUseCase,
     private val getAllExpenseUseCase: GetAllExpenseUseCase,
     private val updateExpenseUseCase: UpdateExpenseUseCase,
-    private val getExpenseUseCase: GetExpenseUseCase
+    private val getExpenseUseCase: GetExpenseUseCase,
+    private val getExpensesDetailsUseCase: GetExpensesDetailsUseCase
 ) : ViewModel() {
 
 
     private var sortByType: Byte = 0
     private var currentCategory: Category = Category.ALL
+
+    private var dateFrom: Long = 0
+
+    private var dateTo: Long = 0
 
     private val _expenseList = MutableStateFlow<List<Expense>>(emptyList())
     val expanseList: StateFlow<List<Expense>>
@@ -37,6 +43,15 @@ class ExpenseViewModel @Inject constructor(
     init {
         loadExpense()
     }
+
+    fun changeDateFrom(date: Long) {
+        dateFrom = date
+    }
+
+    fun changeDateTo(date: Long) {
+        dateTo = date
+    }
+
 
     fun changeSortByDate(sortDate: Byte) {
         sortByType = sortDate
@@ -54,6 +69,14 @@ class ExpenseViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             _expenseList.value = getExpenseUseCase(currentCategory.name, sortByType)
+        }
+    }
+
+    fun getExpenseDetailed(
+    ) {
+        viewModelScope.launch {
+            _expenseList.value =
+                getExpensesDetailsUseCase(currentCategory.name, sortByType, dateFrom, dateTo)
         }
     }
 

@@ -4,11 +4,13 @@ import com.example.trackercosts.domain.entity.Expense
 import com.example.trackercosts.domain.repo.ExpenseRepository
 import javax.inject.Inject
 
-class GetExpenseUseCase @Inject constructor(private val expenseRepository: ExpenseRepository) {
+class GetExpensesDetailsUseCase @Inject constructor(private val expenseRepository: ExpenseRepository) {
     suspend operator fun invoke(
         category: String,
-        sortType: Byte
+        sortType: Byte,
+        dateFrom: Long,
+        dateTo: Long
     ): List<Expense> {
-        return expenseRepository.getExpenses(category, sortType)
+        return expenseRepository.getExpensesDetails(category, sortType, dateFrom, dateTo)
     }
 }

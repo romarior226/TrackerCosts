@@ -8,18 +8,11 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.trackercosts.R
 import com.example.trackercosts.databinding.TrackerFragmentAddExpenseBinding
-import com.example.trackercosts.databinding.TrackerFragmentExpenseListBinding
 import com.example.trackercosts.domain.entity.Category
-import com.example.trackercosts.domain.entity.Expense
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import kotlin.getValue
-import kotlin.math.exp
 
 
 @AndroidEntryPoint
@@ -80,13 +73,15 @@ class ExpenseFragmentAddExpense : Fragment(R.layout.tracker_fragment_add_expense
                 }
             } else {
                 binding.btnSave.setOnClickListener {
-                    val amount = etAmount.text.toString().toDouble()
+                    val amount = etAmount.text.toString()
                     val description = etDescription.text.toString()
                     val currency = spinnerCurrency.selectedItem.toString()
                     Log.d("currencyAdapter", currency)
                     val category = spinnerCategory.selectedItem as Category
-                    viewmodel.addExpense(amount, category, description, currency)
-                    findNavController().popBackStack()
+                    if (!amount.isEmpty()) {
+                        viewmodel.addExpense(amount.toDouble(), category, description, currency)
+                        findNavController().popBackStack()
+                    }
 
                 }
 

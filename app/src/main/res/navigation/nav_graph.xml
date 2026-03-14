@@ -17,4 +17,8 @@
         android:id="@+id/ExpenseFragmentAddExpense"
         android:name="com.example.trackercosts.presentation.ExpenseFragmentAddExpense"
         android:label="ExpenseFragmentAddExpense" />
+    <fragment
+        android:id="@+id/SearchFragment"
+        android:name="com.example.trackercosts.presentation.ExpenseFragmentSearch"
+        android:label="ExpenseFragmentAddExpense" />
 </navigation>

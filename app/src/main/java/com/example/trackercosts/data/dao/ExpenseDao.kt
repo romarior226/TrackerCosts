@@ -6,8 +6,6 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.trackercosts.data.entity.ExpenseDbModel
-import com.example.trackercosts.domain.entity.Category
-import com.example.trackercosts.domain.entity.Expense
 
 @Dao
 interface ExpenseDao {
@@ -29,6 +27,25 @@ ORDER BY
     suspend fun getExpenses(
         category: String,
         sortType: Byte,
+    ): List<ExpenseDbModel>
+
+    @Query(
+        """
+    SELECT * FROM expense 
+    WHERE (:category = 'ALL' OR category = :category)
+    AND(date BETWEEN :dateFrom AND :dateTo )
+ORDER BY
+    CASE WHEN :sortType = 0 THEN date END DESC,
+    CASE WHEN :sortType = 1 THEN date END ASC,
+    CASE WHEN :sortType = 2 THEN amount END DESC,
+    CASE WHEN :sortType = 3 THEN amount END ASC
+"""
+    )
+    suspend fun getExpensesDetails(
+        category: String,
+        sortType: Byte,
+        dateFrom: Long,
+        dateTo: Long
     ): List<ExpenseDbModel>
 
 

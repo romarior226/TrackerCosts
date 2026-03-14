@@ -1,10 +1,14 @@
 package com.example.trackercosts.domain.repo
 
-import com.example.trackercosts.data.entity.ExpenseDbModel
-import com.example.trackercosts.domain.entity.Category
 import com.example.trackercosts.domain.entity.Expense
 
 interface ExpenseRepository {
+    suspend fun getExpensesDetails(
+        category: String,
+        sortType: Byte,
+        dateFrom: Long,
+        dateTo: Long
+    ): List<Expense>
     suspend fun getAllExpense(): List<Expense>
 
     suspend fun getExpenses(category: String, sortType: Byte): List<Expense>
