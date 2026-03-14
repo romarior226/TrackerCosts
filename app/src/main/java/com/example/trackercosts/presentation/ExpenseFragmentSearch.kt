@@ -48,7 +48,7 @@ class ExpenseFragmentSearch : Fragment(R.layout.tracker_fragment_search) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycleScope.launch {
-            viewmodel.expanseList.collect {
+            viewmodel.expenseList.collect {
                 adapter.submitList(it)
             }
         }

@@ -8,10 +8,10 @@ import com.example.trackercosts.domain.entity.Expense
 import com.example.trackercosts.domain.repo.ExpenseRepository
 import javax.inject.Inject
 
-class ExpenseRepoImpl @Inject constructor(private val expanseDao: ExpenseDao) : ExpenseRepository {
+class ExpenseRepoImpl @Inject constructor(private val expenseDao: ExpenseDao) : ExpenseRepository {
 
     suspend fun getAllExpenseDbModelList(): List<ExpenseDbModel> {
-        return expanseDao.getAllExpense()
+        return expenseDao.getAllExpense()
     }
 
     override suspend fun getExpensesDetails(
@@ -20,7 +20,7 @@ class ExpenseRepoImpl @Inject constructor(private val expanseDao: ExpenseDao) : 
         dateFrom: Long,
         dateTo: Long
     ): List<Expense> {
-        return expanseDao.getExpensesDetails(category, sortType, dateFrom, dateTo)
+        return expenseDao.getExpensesDetails(category, sortType, dateFrom, dateTo)
             .map { it.toExpense()
         }
     }
@@ -36,21 +36,21 @@ class ExpenseRepoImpl @Inject constructor(private val expanseDao: ExpenseDao) : 
         category: String,
         sortType: Byte
     ): List<Expense> {
-        return expanseDao.getExpenses(category, sortType).map {
+        return expenseDao.getExpenses(category, sortType).map {
             it.toExpense()
         }
     }
 
     override suspend fun addExpense(expense: Expense): Long {
-        return expanseDao.insertExpense(expense.toDbModel())
+        return expenseDao.insertExpense(expense.toDbModel())
     }
 
     override suspend fun deleteExpense(expense: Expense) {
-        expanseDao.deleteExpense(expense.toDbModel())
+        expenseDao.deleteExpense(expense.toDbModel())
     }
 
     override suspend fun updateExpense(expense: Expense) {
-        expanseDao.updateExpense(expense.toDbModel())
+        expenseDao.updateExpense(expense.toDbModel())
     }
 
 }

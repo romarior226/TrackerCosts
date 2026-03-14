@@ -53,7 +53,7 @@ class ExpenseFragmentAddExpense : Fragment(R.layout.tracker_fragment_add_expense
         binding.spinnerCurrency.adapter = currencyAdapter
         with(binding) {
             if (expenseId != null) {
-                val expense = viewmodel.expanseList.value.find { it.id == expenseId }
+                val expense = viewmodel.expenseList.value.find { it.id == expenseId }
                     ?: throw RuntimeException("NO SUCH ID")
                 etAmount.setText(expense.amount.toString())
                 etDescription.setText(expense.description)

@@ -50,7 +50,7 @@ class ExpenseFragment : Fragment(R.layout.tracker_fragment_expense_list) {
         super.onViewCreated(view, savedInstanceState)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewmodel.expanseList.collect { it ->
+            viewmodel.expenseList.collect { it ->
                 adapter.submitList(it)
                 binding.tvTotalBalance.text  = "Баланс: -${it.sumOf { it.amount }}₴"
             }
